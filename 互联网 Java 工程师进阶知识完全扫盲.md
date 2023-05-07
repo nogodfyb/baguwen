@@ -208,9 +208,11 @@ topic->划分多个partition->每个partition存放一部分数据->存放于一
 
 ##### 错乱场景
 
-一个RabbitMQ实例=>生产者发送三条数据data1，data2，data3(期望消费顺序1，2,3)=>三个消费者消费顺序data2，data1，data3
+一个queue=>生产者发送三条数据data1，data2，data3(期望消费顺序1，2,3)=>三个消费者消费顺序data2，data1，data3
 
 ##### 解决方案
+
+拆分多个queue=>每个queue对应一个消费者=>data1，data2，data3按顺序传入同一个队列=>消费者内部可以采用单线程消费
 
 #### Kafka
 
