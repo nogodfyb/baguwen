@@ -216,9 +216,100 @@ topic->划分多个partition->每个partition存放一部分数据->存放于一
 
 #### Kafka
 
-topic=>
-
 ##### 错乱场景
 
+topic=>三个partition=>指定一个key发送相关数据=>同一个partition=>数据有序=>消费者使用多线程消费=>乱序
+
 ##### 解决方案
+
+1.
+
+一个topic=>一个partition=>一个consumer=>内部单线程消费(吞吐量低)
+
+2.
+
+一个topic=>一个partition=>一个consumer=>内部多个内存队列=>相同key的数据存到同一个内存queue=>每个线程分别消费一个内存queue
+
+### 消息积压相关
+
+现在消费端出故障了，然后大量消息在 mq 里积压，现在出事故了。
+
+#### 几百万消息持续积压几小时
+
+1. 修复consumer，恢复消费速度，然后将现有consumer都停掉
+2. 新建topic,partition是原来的10倍 = 临时建立好原先10倍的queue数量
+3. 写一个临时分发的consumer程序=>将原来积压的大量消息不做耗时消费=>均匀轮询写入到临时建立的10倍数量的队列
+4. 10倍机器来部署consumer=>每一台设备对应的consumer消费一个临时queue的数据
+5. 消费完积压数据，恢复原先部署的架构，重新用原先的consumer机器来消费消息。
+
+#### 如何解决消息队列的延时以及过期失效问题
+
+场景：
+
+RabbtMQ积压了大量TTL消息=>消息过期=>直接搞丢
+
+解决：
+
+批量重导=>手动写程序将丢失的消息全部查询出来=>重新写入MQ
+
+#### 消息队列满了以后该怎么处理
+
+临时写程序=>消费一个丢弃一个=>快速消费掉所有消息=>凌晨来批量重导
+
+### 如何设计一个消息队列
+
+设计思路，考虑以下几点
+
+1. 可伸缩性=>需要时快速扩容=>增加吞吐量和容量=>参照Kafka的设计理念
+2. 持久化=>落地磁盘=>是否需要顺序写=>这样性能高
+3. 可用性  
+4. 支持数据零丢失
+
+## 搜索引擎
+
+### ES 的分布式架构原理是什么
+
+1. 分布式搜索引擎=>底层基于lucene=>多台机器上启动多个ES进程实例=>组成ES集群
+2. 存储数据的基本单位是索引 类比数据库可以这样
+   index=>表
+   document=>行
+   field=>列
+   mapping=>表结构定义
+   node=>每一个服务器
+   shard replica=>数据分片与备份
+3. index=>拆分多个shard=>支持横向扩展=>提高性能(吞吐量)
+4. shard=>由primary shard 和 多个replica shard组成=>primary shard写入数据=>同步到其他replica shard
+5. 多个node=>选举一个master节点=>管理工作(维护索引元数据 切换primary shard和 replica shard)
+   master节点宕机=>重新选举一个节点为master节点
+6. 非master节点宕机了=>此节点上的primary shard失效了=>master节点会让对应的replica shard切换为primary shard
+   宕机的节点修复了=>原来的primary shard=>成为replica shard
+
+### ES 写入数据的工作原理是什么
+
+#### es写数据过程
+
+客户端选择一个node(协调节点)=>节点对document进行路由=>请求转发给对应的node(primary shard)=>处理请求然后同步到 replica node=>协调节点返回响应结果给客户端。
+
+#### es读数据过程
+
+客户端发送请求到任意一个node(协调节点)=>对 doc id 进行哈希路由=>请求转发到对应的node=>使用随机轮询算法在primary和replica shard中随机选择一个=>
+接受请求的node返回document给协调节点=>协调节点返回document给客户端
+
+#### es搜索数据过程
+
+客户端发送请求到协调节点=>转发到所有shard(primary 或者 replica都可)=>每个shard将自己的搜索结果( doc id)返回给协调节点=>协调节点进行数据的合并，排序，分页=>协调节点根据 doc id 去各个节点拉取实际的document数据=>返回给客户端
+
+#### 写数据底层原理
+
+1. primary shard=>
+
+#### 删除/更新数据底层原理
+
+#### 底层lucene
+
+#### 倒排索引
+
+### ES 在数据量很大的情况下（数十亿级别）如何提高查询效率啊？
+
+### ES 生产集群的部署架构是什么？
 
