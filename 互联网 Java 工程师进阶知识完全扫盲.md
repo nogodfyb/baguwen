@@ -431,7 +431,7 @@ redis的多线程部分只是用来处理网络数据的读写和协议解析，
 
 类似于map
 
-![](img\2.png)
+![](https://raw.githubusercontent.com/nogodfyb/baguwen/master/img/2.png)
 
 适合存储一个没有嵌套其他对象的对象。
 
@@ -439,7 +439,7 @@ redis的多线程部分只是用来处理网络数据的读写和协议解析，
 
 有序列表。
 
-![](img\3.png)
+![](https://raw.githubusercontent.com/nogodfyb/baguwen/master/img/3.png)
 
 适用场景：存储粉丝列表，文章的评论列表等。高性能分页可以做微博那种不断下拉功能。
 
@@ -447,7 +447,7 @@ redis的多线程部分只是用来处理网络数据的读写和协议解析，
 
 无序集合，自动去重。
 
-![](img\4.png)
+![](https://raw.githubusercontent.com/nogodfyb/baguwen/master/img/4.png)
 
 应用场景：交集，并集，差集。例如，粉丝列表查看共同好友。
 
@@ -455,7 +455,7 @@ redis的多线程部分只是用来处理网络数据的读写和协议解析，
 
  可以去重，可以排序的集合。
 
-![](img\5.png)
+![](https://raw.githubusercontent.com/nogodfyb/baguwen/master/img/5.png)
 
 ### Redis的过期策略都有哪些
 
