@@ -421,6 +421,10 @@ redis的多线程部分只是用来处理网络数据的读写和协议解析，
 
 最简单的key-value
 
+![](https://github.com/nogodfyb/baguwen/blob/master/img/1.png)
+
+
+
 ![](img\1.png)
 
 适合做简单的KV缓存。
