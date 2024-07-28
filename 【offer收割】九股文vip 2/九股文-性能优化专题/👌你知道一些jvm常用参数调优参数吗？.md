@@ -1,0 +1,10 @@
+[![15、你知道jvm常用的一些调优参数吗.mp4 (19.66MB)](https://gw.alipayobjects.com/mdn/prod_resou/afts/img/A*NNs6TKOR3isAAAAAAAAAAABkARQnAQ)](https://www.yuque.com/docs/176645983?_lake_card=%7B%22status%22%3A%22done%22%2C%22name%22%3A%2215%E3%80%81%E4%BD%A0%E7%9F%A5%E9%81%93jvm%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E8%B0%83%E4%BC%98%E5%8F%82%E6%95%B0%E5%90%97.mp4%22%2C%22size%22%3A20619231%2C%22taskId%22%3A%22u6c6e62d2-1f5c-48f1-a331-670efe9d8ef%22%2C%22taskType%22%3A%22upload%22%2C%22url%22%3Anull%2C%22cover%22%3Anull%2C%22videoId%22%3A%22inputs%2Fprod%2Fyuque%2F2024%2F29413969%2Fmp4%2F1719845322582-1122d0bf-071e-4cb5-8c48-967b90bd63e4.mp4%22%2C%22download%22%3Afalse%2C%22__spacing%22%3A%22both%22%2C%22id%22%3A%22I7Q20%22%2C%22margin%22%3A%7B%22top%22%3Atrue%2C%22bottom%22%3Atrue%7D%2C%22card%22%3A%22video%22%7D#I7Q20)本性能优化案例是通用的！大家消化完成，直接套到自己项目即可！<br />本题配备了视频助于理解。
+
+鸡翅老哥给大家带来一个我们内部探索出来的重点参数的最佳实践，面试出去吹牛逼，秒杀一大片。<br />不需要大家全背，要求大家背其中几个重点。给大家整理一个口语化的回答。<br />当面试问到这个问题的时候，你可以这样的进行回答。
+# 面试口语化回答
+是的，面试官，我熟悉一些比较常见的 jvm 调用参数，他们可以对我们的 jvm 有很大的一部分提升。比如从 jvm 的版本上来说，推荐使用 1.8.0_191 以上。再往前的版本无法感知 docker 的真实核数，可能会产生一些问题。其次就是 gc 的一个选择。正常的话，如果是 c 端， 8g 以上，推荐 g1，以下推荐 cms。如果是 b 段 推荐 parallelgc。还有就是常见的 xmx 和 xms 设置一致（这里说完下个问题，面试官可能会问你为啥一致了就）。xmx 的配置，不要配最大值，一定要按照比例。常见的 8g 服务器，配置 6 g 即可。还有一个比较常见的就是 parallelgcthreads，这个最好是等于容器核数，值太小就会 stw 时间变长。太大，又会影响吞吐量。以上就是我对常见的 jvm 调用参数的一些理解。
+# 详细的一个参数对比表格
+如果还有自己比较熟悉的想往上面补充的，可以自己选择一些，一般上面的这些和面试官回答就够了。<br />![](https://cdn.nlark.com/yuque/0/2024/png/29413969/1718333523660-3cff479f-e5b3-4b1b-b9e2-30207912f425.png#averageHue=%23f1f1f1&clientId=u6714f6bb-6f79-4&from=paste&id=u50c8dd2d&originHeight=1810&originWidth=1958&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=uadc5a1fd-f381-4ca4-8cd5-89a1539ccae&title=)<br />![](https://cdn.nlark.com/yuque/0/2024/png/29413969/1718333523688-71998b9e-e4f0-4a22-8279-49db0a046523.png#averageHue=%23ededed&clientId=u6714f6bb-6f79-4&from=paste&id=ubfe7fd5a&originHeight=554&originWidth=1954&originalType=url&ratio=2&rotation=0&showTitle=false&status=done&style=none&taskId=u14e2c294-7ddf-440a-8cfe-e6d8127430f&title=)
+
+
+
